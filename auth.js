@@ -1,36 +1,31 @@
-const { Router } = require('express');
-const { validationResult, check } = require('express-validator');
-const router = Router();
-const Usuario = require ('../Modelo/Usuario');
-const bcrypt = require('bcryptjs');
-const {generarJWT} = require ('../helpers/jwt');
+'use strict';
 
-router.post('/', [check('email', 'email.requerido').isEmail(),
-check ('contrasena', 'contrasena.requerido').not().isEmpty(),
-], async function(req, res){
-    try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) { 
-            return res.status(400).json ({ mensaje: errors.array()});
-        }
+const Server = require('mongodb-topology-manager').Server;
+const mongodb = require('mongodb');
 
-        const usuario = await Usuario.findOne({email: req.body.email});
-        if(!usuario) {
-            return res.status(400).json ({mensaje: 'User not found'});
-        }
-        const esIgual = bcrypt.compareSync(req.body.contrasena, usuario.contrasena);
-        if (!esIgual) {
-            return res.status(400).json({mensaje: 'User not found'});
-        }
-        const token = generarJWT(usuario);
-
-        res.json({ _id: usuario._id, nombre: usuario.nombre,
-             rol: usuario.rol, email: usuario.email, access_token: token});
-
-    }catch (error) {
-        console.log(error);
-        res.status(500).json({mensaje: 'Internal server error'});
-    }
+run().catch(error => {
+  console.error(error);
+  process.exit(-1);
 });
 
-module.exports = router;
+async function run() {
+  // Create new instance
+  const server = new Server('mongod', {
+    auth: null,
+    dbpath: '/data/db/27017'
+  });
+
+  // Purge the directory
+  await server.purge();
+
+  // Start process
+  await server.start();
+
+  const db = await mongodb.MongoClient.connect('mongodb://localhost:27017/admin');
+
+  await db.addUser('passwordIsTaco', 'taco', {
+    roles: ['dbOwner']
+  });
+
+  console.log('done');
+}
