@@ -1,6 +1,6 @@
 {
   "name": "mongoose",
-  "description": "Mongoose MongoDB ODM",
+  "description": "Mongoose MongoDB user_bd",
   "version": "6.5.3",
   "author": "DanielMorales, JulianaPosada, ManuelAlejandroMarchena",
   "keywords": [
@@ -9,7 +9,7 @@
     "model",
     "schema",
     "database",
-    "odm",
+    "user_bd",
     "data",
     "datastore",
     "query",
