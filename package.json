@@ -2,7 +2,7 @@
   "name": "mongoose",
   "description": "Mongoose MongoDB ODM",
   "version": "6.5.3",
-  "author": "Guillermo Rauch <guillermo@learnboost.com>",
+  "author": "DanielMorales, JulianaPosada, ManuelAlejandroMarchena",
   "keywords": [
     "mongodb",
     "document",
